@@ -49,6 +49,7 @@ public void setup ()
     setFirstNums();
 }
 
+/*
 public void mouseClicked()
 {       
         for(int c = 0; c<NUM_COLS; c++)
@@ -77,6 +78,7 @@ public void mouseClicked()
 
         addAnotherNumber();
 }
+*/
 
 public void keyPressed()
 {
@@ -165,11 +167,8 @@ public class MSButton
 
     public void draw () 
     {    
-        //stroke(100);
         noStroke();
-        //strokeWeight(2);
-        
-        //fill(150);
+
         if(myValue == 2){fill(236,226,216);}
         else if(myValue == 4){fill(236,224,200);}
         else if(myValue == 8){fill(242,177,123);}
@@ -182,16 +181,15 @@ public class MSButton
         else if(myValue == 1024){fill(239,197,63);}
         else if(myValue == 2048){fill(240,192,49);}
         else{fill(204,192,178);}
+
         rect(x, y, width, height);
 
-        //making the box look 3D
-        noStroke();
+        //noStroke();
         
         fill(185,173,159);
         quad(x, y, x+4, y, x+4, y+height-4, x, y+height);
         quad(x, y, x+width, y, x+width-4, y+4, x, y+4);
         
-        //fill(100);
         quad(x+4, y+height-4, x+width, y+height-4, x+width, y+height, x, y+height);
         quad(x+width-4, y+4, x+width, y, x+width, y+height, x+width-4, y+height);
 
