@@ -103,7 +103,7 @@ public void draw ()
     downSwipe.show();
 
     text("Score: " + score, width/2, width/2+100);
-    System.out.println(areTheyStuck());
+    //System.out.println(areTheyStuck());
 }
 
 public void setFirstNums() 
