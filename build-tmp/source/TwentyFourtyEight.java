@@ -20,7 +20,9 @@ public class TwentyFourtyEight extends PApplet {
 
 private static final int NUM_ROWS = 4;
 private static final int NUM_COLS = 4;
-private static final int NUM_ORIGINAL_BOXES = 2;
+private static final int NUM_ORIGINAL_BOXES = 2; //number of original numbered boxes
+
+private int score = 0;
 
 private MSButton[][] buttons;
 
@@ -86,7 +88,7 @@ public void keyPressed()
             for(int r = 0; r<NUM_ROWS; r++)
                 buttons[r][c].setCombinedBoolean(false);
 
-    if(key==CODED)
+    if(key==CODED && !areTheyStuck())
     {
         if(keyCode == LEFT)
             for(int c = 0; c<NUM_COLS; c++)
@@ -117,6 +119,9 @@ public void draw ()
     rightSwipe.show();
     upSwipe.show();
     downSwipe.show();
+
+    text("Score: " + score, width/2, width/2+100);
+    System.out.println(areTheyStuck());
 }
 
 public void setFirstNums() 
@@ -138,12 +143,24 @@ public void addAnotherNumber()
     else
         addAnotherNumber();
 }
+
+public boolean areTheyStuck()
+{
+	for(int c = 0; c<NUM_COLS; c++)
+        for(int r = 0; r<NUM_ROWS; r++)
+        {
+            if(buttons[r][c].isStuck()==false)
+            	return false;
+        }
+
+    return true;
+}
  
 public class MSButton
 {
     private int r, c, myValue;
     private float x,y, width, height;
-    private boolean alreadyCombinedOnce;
+    private boolean alreadyCombinedOnce, isStuck, up, down, left, right;
     
     public MSButton ( int rr, int cc )
     {
@@ -195,13 +212,11 @@ public class MSButton
 
         if(myValue > 0)
         {
-            //fill(0);
             if(myValue <=4){fill(118,106,92);}
             else{fill(255);}
             textSize(35);
             text("" + myValue,x+width/2,y+height/2-3);            
         }
-
         else 
         {
             
@@ -215,6 +230,7 @@ public class MSButton
         {
             alreadyCombinedOnce = true;
             buttons[r][c+1].setValue(myValue + myValue);
+            score += myValue*2;
             setValue(0);
             buttons[r][c+1].setCombinedBoolean(true);
             buttons[r][c+1].swipeToRight();
@@ -233,6 +249,7 @@ public class MSButton
         {
             alreadyCombinedOnce = true;
             buttons[r][c-1].setValue(myValue + myValue);
+            score += myValue*2;
             setValue(0);
             buttons[r][c-1].setCombinedBoolean(true);
             buttons[r][c-1].swipeToLeft();
@@ -251,6 +268,7 @@ public class MSButton
         {
             alreadyCombinedOnce = true;
             buttons[r-1][c].setValue(myValue + myValue);
+            score += myValue*2;
             setValue(0);
             buttons[r-1][c].setCombinedBoolean(true);
             buttons[r-1][c].swipeUp();
@@ -269,6 +287,7 @@ public class MSButton
         {
             alreadyCombinedOnce = true;
             buttons[r+1][c].setValue(myValue + myValue);
+            score += myValue*2;
             setValue(0);
             buttons[r+1][c].setCombinedBoolean(true);
             buttons[r+1][c].swipeDown();
@@ -299,8 +318,34 @@ public class MSButton
 
     public boolean isStuck()
     {
-        return true;
-        //if(c==3 && buttons[r][c-1].getValue()!=myValue
+        //return true;
+        //boolean left;
+        if(isValid(r,c-1))
+        	if(buttons[r][c-1].getValue() == myValue)
+        		left = false;
+        else  left = true;
+
+       // boolean right;
+        if(isValid(r,c+1))
+        	if(buttons[r][c+1].getValue() == myValue)
+        		right = false;
+        else  right = true;
+
+        //boolean up;
+        if(isValid(r-1,c))
+        	if(buttons[r-1][c].getValue() == myValue)
+        		up = false;
+        else  up = true;
+
+       // boolean down;
+        if(isValid(r+1,c))
+        	if(buttons[r+1][c].getValue() == myValue)
+        		down = false;
+        else  down = true;
+
+        if(up && down && left && right)	return true;
+
+        return false;
     }
 }
 
