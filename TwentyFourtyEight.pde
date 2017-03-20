@@ -70,7 +70,7 @@ public void keyPressed()
             for(int r = 0; r<NUM_ROWS; r++)
                 buttons[r][c].setCombinedBoolean(false);
 
-    if(key==CODED && !areTheyStuck())
+    if(key==CODED && areTheyStuck() == false)
     {
         if(keyCode == LEFT)
             for(int c = 0; c<NUM_COLS; c++)
@@ -88,8 +88,10 @@ public void keyPressed()
             for(int c = NUM_COLS -1; c>=0; c--)
                 for(int r = NUM_COLS -1; r>=0; r--)
                     buttons[r][c].swipeDown();
+
+        addAnotherNumber();
     }
-    addAnotherNumber();
+    
 
 }
 
@@ -103,7 +105,7 @@ public void draw ()
     downSwipe.show();
 
     text("Score: " + score, width/2, width/2+100);
-    //System.out.println(areTheyStuck());
+    System.out.println(areTheyStuck());
 }
 
 public void setFirstNums() 
@@ -227,7 +229,8 @@ public class MSButton
 
     public void swipeToLeft()
     {
-        if(myValue > 0 && isValid(r,c-1) && buttons[r][c-1].getValue() == myValue && alreadyCombinedOnce == false)
+
+
         {
             alreadyCombinedOnce = true;
             buttons[r][c-1].setValue(myValue + myValue);
@@ -303,25 +306,25 @@ public class MSButton
         //return true;
         //boolean left;
         if(isValid(r,c-1))
-        	if(buttons[r][c-1].getValue() == myValue)
+        	if(myValue > 1 && buttons[r][c-1].getValue() == myValue)
         		left = false;
         else  left = true;
 
        // boolean right;
         if(isValid(r,c+1))
-        	if(buttons[r][c+1].getValue() == myValue)
+        	if(myValue > 1 && buttons[r][c+1].getValue() == myValue)
         		right = false;
         else  right = true;
 
         //boolean up;
         if(isValid(r-1,c))
-        	if(buttons[r-1][c].getValue() == myValue)
+        	if(myValue > 1 && buttons[r-1][c].getValue() == myValue)
         		up = false;
         else  up = true;
 
        // boolean down;
         if(isValid(r+1,c))
-        	if(buttons[r+1][c].getValue() == myValue)
+        	if(myValue > 1 && buttons[r+1][c].getValue() == myValue)
         		down = false;
         else  down = true;
 
