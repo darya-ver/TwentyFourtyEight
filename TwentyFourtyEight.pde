@@ -15,7 +15,7 @@ GameButton rightSwipe = new GameButton(400, 110, "right");
 GameButton upSwipe = new GameButton(400,210, "up");
 GameButton downSwipe = new GameButton(400,310, "down");
 
-void setup ()
+public void setup ()
 {
     size(600, 700);
     textAlign(CENTER,CENTER);
@@ -70,29 +70,39 @@ public void keyPressed()
             for(int r = 0; r<NUM_ROWS; r++)
                 buttons[r][c].setCombinedBoolean(false);
 
-    if(key==CODED && areTheyStuck() == false)
+    if(key==CODED)
     {
         if(keyCode == LEFT)
+        {
             for(int c = 0; c<NUM_COLS; c++)
                 for(int r = 0; r<NUM_ROWS; r++)
                     buttons[r][c].swipeToLeft();
+            addAnotherNumber();
+        }
         else if(keyCode == RIGHT)
+        {
             for(int c = NUM_COLS -1; c>=0; c--)
                 for(int r = NUM_COLS -1; r>=0; r--)
                     buttons[r][c].swipeToRight();
+            addAnotherNumber();
+        }
         else if(keyCode == UP)
+        {
             for(int c = 0; c<NUM_COLS; c++)
                 for(int r = 0; r<NUM_ROWS; r++)
                     buttons[r][c].swipeUp();
+            addAnotherNumber();
+        }
         else if(keyCode == DOWN)
+        {
             for(int c = NUM_COLS -1; c>=0; c--)
                 for(int r = NUM_COLS -1; r>=0; r--)
                     buttons[r][c].swipeDown();
+            addAnotherNumber();
+        }
 
-        addAnotherNumber();
+        //addAnotherNumber();
     }
-    
-
 }
 
 public void draw ()
@@ -105,7 +115,7 @@ public void draw ()
     downSwipe.show();
 
     text("Score: " + score, width/2, width/2+100);
-    System.out.println(areTheyStuck());
+    System.out.println(buttons[1][1].isStuckLeft());
 }
 
 public void setFirstNums() 
@@ -128,15 +138,47 @@ public void addAnotherNumber()
         addAnotherNumber();
 }
 
-public boolean areTheyStuck()
+public boolean areTheyStuckLeft()
 {
 	for(int c = 0; c<NUM_COLS; c++)
         for(int r = 0; r<NUM_ROWS; r++)
         {
-            if(buttons[r][c].isStuck()==false)
+            if(buttons[r][c].isStuckLeft()==false)
             	return false;
         }
+    return true;
+}
 
+public boolean areTheyStuckRight()
+{
+	for(int c = 0; c<NUM_COLS; c++)
+        for(int r = 0; r<NUM_ROWS; r++)
+        {
+            if(buttons[r][c].isStuckRight()==false)
+            	return false;
+        }
+    return true;
+}
+
+public boolean areTheyStuckUp()
+{
+	for(int c = 0; c<NUM_COLS; c++)
+        for(int r = 0; r<NUM_ROWS; r++)
+        {
+            if(buttons[r][c].isStuckUp()==false)
+            	return false;
+        }
+    return true;
+}
+
+public boolean areTheyStuckDown()
+{
+	for(int c = 0; c<NUM_COLS; c++)
+        for(int r = 0; r<NUM_ROWS; r++)
+        {
+            if(buttons[r][c].isStuckDown()==false)
+            	return false;
+        }
     return true;
 }
  
@@ -205,32 +247,31 @@ public class MSButton
         {
             
         }
-        
     }
 
     public void swipeToRight()
     {
-        if(myValue > 0 && isValid(r,c+1) && buttons[r][c+1].getValue() == myValue && alreadyCombinedOnce == false)
-        {
-            alreadyCombinedOnce = true;
-            buttons[r][c+1].setValue(myValue + myValue);
-            score += myValue*2;
-            setValue(0);
-            buttons[r][c+1].setCombinedBoolean(true);
-            buttons[r][c+1].swipeToRight();
-        }
-        else if(myValue > 0 && isValid(r,c+1) && buttons[r][c+1].getValue() == 0)
-        {
-            buttons[r][c+1].setValue(myValue);
-            setValue(0);
-            buttons[r][c+1].swipeToRight();
-        }
+	        if(myValue > 0 && isValid(r,c+1) && buttons[r][c+1].getValue() == myValue && alreadyCombinedOnce == false)
+	        {
+	            alreadyCombinedOnce = true;
+	            buttons[r][c+1].setValue(myValue + myValue);
+	            score += myValue*2;
+	            setValue(0);
+	            buttons[r][c+1].setCombinedBoolean(true);
+	            buttons[r][c+1].swipeToRight();
+	        }
+	        else if(myValue > 0 && isValid(r,c+1) && buttons[r][c+1].getValue() == 0)
+	        {
+	            buttons[r][c+1].setValue(myValue);
+	            setValue(0);
+	            buttons[r][c+1].swipeToRight();
+	        }
     }
 
     public void swipeToLeft()
     {
 
-
+    	if(myValue >0 && isValid(r,c-1) && buttons[r][c-1].getValue() == myValue && alreadyCombinedOnce == false)
         {
             alreadyCombinedOnce = true;
             buttons[r][c-1].setValue(myValue + myValue);
@@ -301,37 +342,45 @@ public class MSButton
         return false;
     }
 
-    public boolean isStuck()
+    public boolean isStuckLeft()
     {
-        //return true;
-        //boolean left;
+        if(myValue == 0)	return false;
         if(isValid(r,c-1))
-        	if(myValue > 1 && buttons[r][c-1].getValue() == myValue)
-        		left = false;
-        else  left = true;
+        	if(buttons[r][c-1].getValue() == myValue)
+        		return false;
+        return true;
+    }
 
-       // boolean right;
+    public boolean isStuckRight()
+    {
+
         if(isValid(r,c+1))
         	if(myValue > 1 && buttons[r][c+1].getValue() == myValue)
-        		right = false;
-        else  right = true;
+        		return false;
+        return true;
+    }
 
-        //boolean up;
+    public boolean isStuckUp()
+    {
         if(isValid(r-1,c))
         	if(myValue > 1 && buttons[r-1][c].getValue() == myValue)
-        		up = false;
-        else  up = true;
+        		return false;
+        return true;
+    }
 
-       // boolean down;
+    public boolean isStuckDown()
+    {
         if(isValid(r+1,c))
         	if(myValue > 1 && buttons[r+1][c].getValue() == myValue)
-        		down = false;
-        else  down = true;
-
-        if(up && down && left && right)	return true;
-
-        return false;
+        		return false;
+        return true;
     }
+
+    //     if(up && down && left && right)
+    //     	return true;
+
+    //     return false;
+    // }
 }
 
 public class GameButton
