@@ -28,10 +28,11 @@ private MSButton[][] buttons;
 
 private ArrayList <MSButton> numberedSquares= new ArrayList <MSButton>();
 
-GameButton leftSwipe = new GameButton(400,10,"left");
-GameButton rightSwipe = new GameButton(400, 110, "right");
-GameButton upSwipe = new GameButton(400,210, "up");
-GameButton downSwipe = new GameButton(400,310, "down");
+public boolean gameStarted = true;
+public boolean playGame = false;
+public boolean gameIsOver = false;
+
+public GameButton start = new GameButton(500/2, 700/2, "start");
 
 public void setup ()
 {
@@ -51,36 +52,11 @@ public void setup ()
     setFirstNums();
 }
 
-/*
-public void mouseClicked()
-{       
-        for(int c = 0; c<NUM_COLS; c++)
-            for(int r = 0; r<NUM_ROWS; r++)
-                buttons[r][c].setCombinedBoolean(false);
-        
-        if(leftSwipe.inButton())
-            for(int c = 0; c<NUM_COLS; c++)
-                for(int r = 0; r<NUM_ROWS; r++)
-                    buttons[r][c].swipeToLeft();
-
-        else if(rightSwipe.inButton())
-            for(int c = NUM_COLS -1; c>=0; c--)
-                for(int r = NUM_COLS -1; r>=0; r--)
-                    buttons[r][c].swipeToRight();
-
-        else if(upSwipe.inButton())
-            for(int c = 0; c<NUM_COLS; c++)
-                for(int r = 0; r<NUM_ROWS; r++)
-                    buttons[r][c].swipeUp();
-
-        else if(downSwipe.inButton())
-            for(int c = NUM_COLS -1; c>=0; c--)
-                for(int r = NUM_COLS -1; r>=0; r--)
-                    buttons[r][c].swipeDown();
-
-        addAnotherNumber();
+public void draw ()
+{
+    background(0);
+    start.show();
 }
-*/
 
 public void keyPressed()
 {
@@ -121,83 +97,7 @@ public void keyPressed()
     }
 }
 
-public void draw ()
-{
-    background(0);
-
-    leftSwipe.show();
-    rightSwipe.show();
-    upSwipe.show();
-    downSwipe.show();
-
-    text("Score: " + score, width/2, width/2+100);
-    //System.out.println(areTheyStuckRight());
-}
-
-public void setFirstNums() 
-{
-    for(int i = 0; i < NUM_ORIGINAL_BOXES; i++)
-    {
-        addAnotherNumber();
-    }
-}
-
-public void addAnotherNumber()
-{
-    int roww = (int)(Math.random()*NUM_ROWS);
-    int coll = (int)(Math.random()*NUM_COLS);
-    if(buttons[roww][coll].getValue() == 0)
-    {
-        buttons[roww][coll].setOriginalValue();
-    }
-    else
-        addAnotherNumber();
-}
-
-public boolean areTheyStuckLeft()
-{
-	for(int c = 0; c<NUM_COLS; c++)
-        for(int r = 0; r<NUM_ROWS; r++)
-        {
-            if(buttons[r][c].isStuckLeft()==false)
-            	return false;
-        }
-    return true;
-}
-
-public boolean areTheyStuckRight()
-{
-	for(int c = NUM_COLS -1 ; c>=0; c--)
-        for(int r = NUM_ROWS -1; r>=0; r--)
-        {
-            if(buttons[r][c].isStuckRight()==false)
-            	return false;
-        }
-    return true;
-}
-
-public boolean areTheyStuckUp()
-{
-	for(int c = 0; c<NUM_COLS; c++)
-        for(int r = 0; r<NUM_ROWS; r++)
-        {
-            if(buttons[r][c].isStuckUp()==false)
-            	return false;
-        }
-    return true;
-}
-
-public boolean areTheyStuckDown()
-{
-	for(int c = NUM_COLS -1 ; c>=0; c--)
-        for(int r = NUM_ROWS -1; r>=0; r--)
-        {
-            if(buttons[r][c].isStuckDown()==false)
-            	return false;
-        }
-    return true;
-}
- 
+//classes
 public class MSButton
 {
     private int r, c, myValue;
@@ -210,7 +110,7 @@ public class MSButton
         height = 300/NUM_ROWS;
         r = rr;
         c = cc; 
-        x = c*width;
+        x = c*width + 100;
         y = r*height;
         myValue = 0;
         alreadyCombinedOnce = false;
@@ -226,43 +126,46 @@ public class MSButton
 
     public void draw () 
     {    
-        noStroke();
+    	if(playGame)
+    	{
+	        noStroke();
 
-        if(myValue == 2){fill(236,226,216);}
-        else if(myValue == 4){fill(236,224,200);}
-        else if(myValue == 8){fill(242,177,123);}
-        else if(myValue == 16){fill(246,148,99);}
-        else if(myValue == 32){fill(243,126,90);}
-        else if(myValue == 64){fill(239,97,60);}
-        else if(myValue == 128){fill(239,205,112);}
-        else if(myValue == 256){fill(237,205,97);}
-        else if(myValue == 512){fill(236,200,80);}
-        else if(myValue == 1024){fill(239,197,63);}
-        else if(myValue == 2048){fill(240,192,49);}
-        else{fill(204,192,178);}
+	        if(myValue == 2){fill(236,226,216);}
+	        else if(myValue == 4){fill(236,224,200);}
+	        else if(myValue == 8){fill(242,177,123);}
+	        else if(myValue == 16){fill(246,148,99);}
+	        else if(myValue == 32){fill(243,126,90);}
+	        else if(myValue == 64){fill(239,97,60);}
+	        else if(myValue == 128){fill(239,205,112);}
+	        else if(myValue == 256){fill(237,205,97);}
+	        else if(myValue == 512){fill(236,200,80);}
+	        else if(myValue == 1024){fill(239,197,63);}
+	        else if(myValue == 2048){fill(240,192,49);}
+	        else{fill(204,192,178);}
 
-        rect(x, y, width, height);
+	        rect(x, y, width, height);
 
-        //noStroke();
-        
-        fill(185,173,159);
-        quad(x, y, x+4, y, x+4, y+height-4, x, y+height);
-        quad(x, y, x+width, y, x+width-4, y+4, x, y+4);
-        
-        quad(x+4, y+height-4, x+width, y+height-4, x+width, y+height, x, y+height);
-        quad(x+width-4, y+4, x+width, y, x+width, y+height, x+width-4, y+height);
+	        //noStroke();
+	        
+	        fill(185,173,159);
+	        quad(x, y, x+4, y, x+4, y+height-4, x, y+height);
+	        quad(x, y, x+width, y, x+width-4, y+4, x, y+4);
+	        
+	        quad(x+4, y+height-4, x+width, y+height-4, x+width, y+height, x, y+height);
+	        quad(x+width-4, y+4, x+width, y, x+width, y+height, x+width-4, y+height);
 
-        if(myValue > 0)
-        {
-            if(myValue <=4){fill(118,106,92);}
-            else{fill(255);}
-            textSize(35);
-            text("" + myValue,x+width/2,y+height/2-3);            
-        }
-        else 
-        {
-            
-        }
+	        if(myValue > 0)
+	        {
+	            if(myValue <=4){fill(118,106,92);}
+	            else{fill(255);}
+	            textSize(35);
+	            text("" + myValue,x+width/2,y+height/2-3);            
+	        }
+	        else 
+	        {
+	            
+	        }
+	    }
     }
 
     public void swipeToRight()
@@ -468,6 +371,12 @@ public class GameButton
           line(myX + 35, myY + 56, myX + 24, myY + 43);
           line(myX + 35, myY + 56, myX + 46, myY + 43);
         }
+        else if(myType == "start")
+        {
+        	widthh = 210;
+        	textSize(50);
+        	text("S", myX + widthh/2, myY + heightt/2);
+        }
 
         if(inButton())
             highlighted();
@@ -491,11 +400,99 @@ public class GameButton
             return true;
         return false;
     }
-
 }
 
+//different screen functions
+public void startScreen()
+{
+	playGame = false;
+	gameIsOver = false;
 
+	
 
+}
+public void gamePlay()
+{
+	gameStarted = false;
+	gameIsOver = false;
+
+	text("Score: " + score, width/2, width/2+100);
+	if(gameOver())	gameIsOver = true;
+}
+public void endGame()
+{
+	gameStarted = false;
+	playGame = false;
+
+	text("GAME OVER", width/2, height/2 + 100);
+}
+
+//setting number functions
+public void setFirstNums() 
+{
+    for(int i = 0; i < NUM_ORIGINAL_BOXES; i++)
+    {
+        addAnotherNumber();
+    }
+}
+public void addAnotherNumber()
+{
+    int roww = (int)(Math.random()*NUM_ROWS);
+    int coll = (int)(Math.random()*NUM_COLS);
+    if(buttons[roww][coll].getValue() == 0)
+    {
+        buttons[roww][coll].setOriginalValue();
+    }
+    else
+        addAnotherNumber();
+}
+
+//stuck functions
+public boolean areTheyStuckLeft()
+{
+	for(int c = 0; c<NUM_COLS; c++)
+        for(int r = 0; r<NUM_ROWS; r++)
+        {
+            if(buttons[r][c].isStuckLeft()==false)
+            	return false;
+        }
+    return true;
+}
+public boolean areTheyStuckRight()
+{
+	for(int c = NUM_COLS -1 ; c>=0; c--)
+        for(int r = NUM_ROWS -1; r>=0; r--)
+        {
+            if(buttons[r][c].isStuckRight()==false)
+            	return false;
+        }
+    return true;
+}
+public boolean areTheyStuckUp()
+{
+	for(int c = 0; c<NUM_COLS; c++)
+        for(int r = 0; r<NUM_ROWS; r++)
+        {
+            if(buttons[r][c].isStuckUp()==false)
+            	return false;
+        }
+    return true;
+}
+public boolean areTheyStuckDown()
+{
+	for(int c = NUM_COLS -1 ; c>=0; c--)
+        for(int r = NUM_ROWS -1; r>=0; r--)
+        {
+            if(buttons[r][c].isStuckDown()==false)
+            	return false;
+        }
+    return true;
+}
+public boolean gameOver()
+{
+	if(areTheyStuckRight()&&areTheyStuckDown()&&areTheyStuckUp()&&areTheyStuckLeft())	return true;
+	return false;
+}
 
 
 
@@ -696,7 +693,7 @@ public void gameRunning()
 
 
 
-  public void settings() {  size(600, 700); }
+  public void settings() {  size(500, 700); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "TwentyFourtyEight" };
     if (passedArgs != null) {
