@@ -14,8 +14,8 @@ public boolean gameStarted = true;
 public boolean playGame = false;
 public boolean gameIsOver = false;
 
-public GameButton start = new GameButton(500/2, 700/2, "start");
-
+public GameButton start = new GameButton(500/2 -100 , 700/2 - 35, "start");
+public GameButton restart = new GameButton(500/2 - 100, 700/2 - 35, "restart");
 public void setup ()
 {
     size(500, 700);
@@ -36,10 +36,35 @@ public void setup ()
 
 public void draw ()
 {
-    background(0);
-    start.show();
-}
+    background(150,150,150);
 
+    if(gameStarted){startScreen();}
+    //else if(instructions){instructionsFunc();}
+    else if(playGame){gamePlay();}
+    else if(gameIsOver){endGame();}
+}
+public void mousePressed()
+{
+    if(gameStarted)
+    {
+        if(start.inButton())
+        {
+            gamePlay();
+        }
+    }
+    
+    else if(gameIsOver)
+    {
+        if(restart.inButton())
+        {
+            restartNumbers();
+            setFirstNums();
+            playGame = true;
+            score = 0;
+        }
+    }
+    
+}
 public void keyPressed()
 {
     for(int c = 0; c<NUM_COLS; c++)
@@ -321,43 +346,19 @@ public class GameButton
         fill(255,0,0);
         textSize(30);
 
-        if (myType == "left")
-        {
-          strokeWeight(3);
-          stroke(0);
-          line(myX + 14, myY + 35, myX + 56, myY + 35);
-          line(myX + 14, myY + 35, myX + 27, myY + 24);
-          line(myX + 14, myY + 35, myX + 27, myY + 46);
-        }
-        else if(myType == "right")
-        {
-          strokeWeight(3);
-          stroke(0);
-          line(myX + 14, myY + 35, myX + 56, myY + 35);
-          line(myX + 56, myY + 35, myX + 43, myY + 46);
-          line(myX + 56, myY + 35, myX + 43, myY + 24);
-        }
-        else if(myType == "up")
-        {
-          strokeWeight(3);
-          stroke(0);
-          line(myX + 35, myY + 14, myX + 35, myY + 56);
-          line(myX + 35, myY + 14, myX + 24, myY + 27);
-          line(myX + 35, myY + 14, myX + 46, myY + 27);
-        }
-        else if(myType == "down")
-        {
-          strokeWeight(3);
-          stroke(0);
-          line(myX + 35, myY + 14, myX + 35, myY + 56);
-          line(myX + 35, myY + 56, myX + 24, myY + 43);
-          line(myX + 35, myY + 56, myX + 46, myY + 43);
-        }
-        else if(myType == "start")
+       if(myType == "start")
         {
         	widthh = 210;
         	textSize(50);
-        	text("S", myX + widthh/2, myY + heightt/2);
+        	text("S", myX + widthh/2, myY + heightt/2-7);
+        }
+
+        else if(myType == "restart")
+        {
+            widthh = 210;
+            textSize(50);
+            fill(66,134,235);
+            text("Restart", myX + widthh/2, myY + heightt/2-7);
         }
 
         if(inButton())
@@ -387,26 +388,43 @@ public class GameButton
 //different screen functions
 public void startScreen()
 {
-	playGame = false;
-	gameIsOver = false;
+	gameStarted = true;
+    playGame = false;
+    gameIsOver = false;
+    //instructions = false;
 
-	
-
+    start.show();
 }
 public void gamePlay()
 {
 	gameStarted = false;
-	gameIsOver = false;
+    //instructions = false;
+    gameIsOver = false;
+    playGame = true;
 
-	text("Score: " + score, width/2, width/2+100);
-	if(gameOver())	gameIsOver = true;
+
+    fill(255);
+    textSize(40);
+
+    text("Score: " + score, width/2, 600);
+    
+    if(gameOver())
+    {
+        gameIsOver = true;
+        gameStarted = false;
+        playGame = false;
+    }
 }
 public void endGame()
 {
-	gameStarted = false;
-	playGame = false;
+    gameIsOver = true;
+    gameStarted = false;
+    playGame = false;
+    //instructions = false;
 
-	text("GAME OVER", width/2, height/2 + 100);
+    restart.show();
+
+    text("GAME OVER", width/2, 600);
 }
 
 //setting number functions
@@ -474,6 +492,14 @@ public boolean gameOver()
 {
 	if(areTheyStuckRight()&&areTheyStuckDown()&&areTheyStuckUp()&&areTheyStuckLeft())	return true;
 	return false;
+}
+public void restartNumbers()
+{
+    for(int c = 0; c<NUM_COLS; c++)
+        for(int r = 0; r<NUM_ROWS; r++)
+        {
+            buttons[r][c].setValue(0);
+        }
 }
 
 
