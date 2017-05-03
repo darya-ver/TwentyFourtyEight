@@ -2,7 +2,7 @@ import de.bezier.guido.*;
 
 private static final int NUM_ROWS = 4;
 private static final int NUM_COLS = 4;
-private static final int NUM_ORIGINAL_BOXES = 2; //number of original numbered boxes
+private static final int NUM_ORIGINAL_BOXES = 2; 
 
 private int score = 0;
 
